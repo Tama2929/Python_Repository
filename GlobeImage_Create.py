@@ -15,3 +15,16 @@ for i in range(360):
     map.drawparallels(np.arange(-90, 90, 30))
     plt.savefig(folderName+'fig_{:04}'.format(i)+'.png')
     plt.close()
+
+# 動画作成
+import cv2
+
+fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+video = cv2.VideoWriter('./Image Folder/video.mp4', fourcc, 20.0, (640, 480))
+
+for i in range(360):
+    img = cv2.imread(folderName+'fig_{:04}'.format(i)+'.png')
+    img = cv2.resize(img, (640,480))
+    video.write(img)
+
+video.release()
