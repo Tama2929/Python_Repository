@@ -49,13 +49,13 @@ def get_element(table):
 
     return re_rows
 
+# 格納する配列
+route = np.array([])
 
-route = list(range(1))
-
+# 配列の結合
 for x in range(len(tables)):
     table = tables[x]
     result = get_element(table)
-    route.append(result)
+    route = np.append(route, result)
 
-del route[0]
 print(route)
