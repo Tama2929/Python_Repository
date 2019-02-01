@@ -1,3 +1,4 @@
+# Python3.5
 # グラフィック描画
 from kivy.config import Config
 Config.set('graphics', 'width', '400')

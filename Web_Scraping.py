@@ -1,3 +1,4 @@
+# Python3.6
 # HTMLデータを取得
 import requests
 
