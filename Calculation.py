@@ -1,18 +1,34 @@
 # Python3.5
 # グラフィック描画
 from kivy.config import Config
+
 Config.set('graphics', 'width', '400')
 Config.set('graphics', 'height', '400')
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
+
 class Calculator(BoxLayout):
+    global operators_flag
+    operators_flag = True
+    global equal_flag
+    equal_flag = True
+
     # 数字入力関数
     def numbers(self, number):
-        # 文字列操作
-        text = "{}{}".format(self.display1.text, number)
-        self.display1.text = text
+        global equal_flag
+
+        if equal_flag:
+            # 文字列操作
+            text = "{}{}".format(self.display1.text, number)
+            self.display1.text = text
+            global operators_flag
+            operators_flag = True
+        else:
+            equal_flag = True
+            self.display1.text = number
+            self.display2.text = ""
 
     # クリア
     def clear(self):
@@ -21,15 +37,25 @@ class Calculator(BoxLayout):
 
     # 演算子の入力
     def operators(self, operator):
-        text = "{}{}{}".format(self.display2.text, self.display1.text, operator)
-        self.display1.text = ""
-        self.display2.text = text
+        global operators_flag
+        global equal_flag
+
+        if self.display1.text == "":
+            self.display1.text = '0'
+            operators_flag = True
+
+        if operators_flag:
+            text = "{}{}{}".format(self.display2.text, self.display1.text, operator)
+            self.display1.text = ""
+            self.display2.text = text
+            operators_flag = False
+            equal_flag = True
 
     # 入力値の削除
     def delete(self):
         self.display1.text = ""
 
-    # 符号、小数点
+    # 符号、小数点(未実施)、百分率(未実施)
     def calculates(self, calc):
         if '-' in self.display1.text:
             text = self.display1.text.split('-')
@@ -39,16 +65,20 @@ class Calculator(BoxLayout):
             self.display1.text = "{}{}".format('-', self.display1.text)
 
     # 計算
-    def equal(self,equal):
+    def equal(self, equal):
+        global equal_flag
+
         text = "{}{}".format(self.display2.text, self.display1.text)
-        text = text.split('+,-,*,/')
-        print(text)
+        self.display2.text = ""
+        self.display1.text = str(eval(text))
+        equal_flag = False
 
 
 class CalculatorRoot(BoxLayout):
     # コンストラクタ
     def __init__(self, **kwargs):
         super(CalculatorRoot, self).__init__(**kwargs)
+
     pass
 
 
@@ -57,6 +87,7 @@ class Calc(App):
     def __init__(self, **kwargs):
         super(Calc, self).__init__(**kwargs)
         self.title = 'SampleGame'
+
     pass
 
 
