@@ -7,6 +7,7 @@ Config.set('graphics', 'height', '400')
 
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
+from decimal import Decimal
 
 
 # 符号処理
@@ -32,9 +33,9 @@ def ratio_change(text):
     return result
 
 
-# 小数点処理(未実施)
+# 小数点処理
 def point_change(text):
-    result = 1
+    result = "{}{}".format(text, '.')
     return result
 
 
@@ -84,7 +85,7 @@ class Calculator(BoxLayout):
     def delete(self):
         self.display1.text = ""
 
-    # 符号、小数点(未実施)、百分率(未実施)
+    # 符号、小数点、百分率(未実施)
     def calculates(self, calc):
         if calc == '+/-':
             self.display1.text = sign_change(self.display1.text)
@@ -99,7 +100,7 @@ class Calculator(BoxLayout):
 
         text = "{}{}".format(self.display2.text, self.display1.text)
         self.display2.text = ""
-        self.display1.text = str(eval(text))
+        self.display1.text = str(Decimal(eval(text)).normalize())
         equal_flag = False
 
 
