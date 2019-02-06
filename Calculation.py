@@ -9,6 +9,35 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 
 
+# 符号処理
+def sign_change(text):
+    result = ''
+    sign = list(text)
+    # 負の符号確認
+    if '-' == sign[0]:
+        # 負→正
+        sign.pop(0)
+        for text in sign:
+            result += text
+        return result
+    else:
+        # 正→負
+        result = "{}{}".format('-', text)
+        return result
+
+
+# 割合処理(未実施)
+def ratio_change(text):
+    result = 1
+    return result
+
+
+# 小数点処理(未実施)
+def point_change(text):
+    result = 1
+    return result
+
+
 class Calculator(BoxLayout):
     global operators_flag
     operators_flag = True
@@ -57,12 +86,12 @@ class Calculator(BoxLayout):
 
     # 符号、小数点(未実施)、百分率(未実施)
     def calculates(self, calc):
-        if '-' in self.display1.text:
-            text = self.display1.text.split('-')
-            del text[0]
-            self.display1.text = text
+        if calc == '+/-':
+            self.display1.text = sign_change(self.display1.text)
+        elif calc == '%':
+            self.display1.text = ratio_change(self.display1.text)
         else:
-            self.display1.text = "{}{}".format('-', self.display1.text)
+            self.display1.text = point_change(self.display1.text)
 
     # 計算
     def equal(self, equal):
