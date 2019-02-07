@@ -11,9 +11,9 @@ from decimal import Decimal
 
 
 # 符号処理
-def sign_change(text):
+def sign_change(value):
     result = ''
-    sign = list(text)
+    sign = list(value)
     # 負の符号確認
     if '-' == sign[0]:
         # 負→正
@@ -23,40 +23,60 @@ def sign_change(text):
         return result
     else:
         # 正→負
-        result = "{}{}".format('-', text)
+        result = "{}{}".format('-', value)
         return result
 
 
-# 割合処理(未実施)
-def ratio_change(text):
-    result = 1
+# 割合処理(未完成/例外処理)
+def ratio_change(value1, value2):
+    value = ''
+    text = list(value2)
+
+    # 符号の取得
+    sign = text.pop()
+
+    # 左辺側の値を文字列化
+    for x in text:
+        value += x
+
+    # 符号別に分岐
+    ratio = str(eval(value1 + '/100'))
+    if sign == '+' or sign == '-':
+        # Ex)100*(10/100)
+        result = str(Decimal(eval(value + '*' + ratio)).to_integral())
+    elif sign == '*' or sign == '/':
+        result = ratio
     return result
 
 
 # 小数点処理
-def point_change(text):
-    result = "{}{}".format(text, '.')
+def point_change(value):
+    result = "{}{}".format(value, '.')
     return result
 
 
 class Calculator(BoxLayout):
+    # 演算子の入力判断フラグ
     global operators_flag
     operators_flag = True
+    # 数字の入力判断フラグ
     global equal_flag
     equal_flag = True
 
     # 数字入力関数
     def numbers(self, number):
         global equal_flag
+        global operators_flag
 
         if equal_flag:
+            operators_flag = True
+
             # 文字列操作
             text = "{}{}".format(self.display1.text, number)
             self.display1.text = text
-            global operators_flag
-            operators_flag = True
         else:
             equal_flag = True
+
             self.display1.text = number
             self.display2.text = ""
 
@@ -71,37 +91,42 @@ class Calculator(BoxLayout):
         global equal_flag
 
         if self.display1.text == "":
-            self.display1.text = '0'
             operators_flag = True
 
+            self.display1.text = '0'
+
         if operators_flag:
+            operators_flag = False
+            equal_flag = True
+
             text = "{}{}{}".format(self.display2.text, self.display1.text, operator)
             self.display1.text = ""
             self.display2.text = text
-            operators_flag = False
-            equal_flag = True
 
     # 入力値の削除
     def delete(self):
         self.display1.text = ""
 
-    # 符号、小数点、百分率(未実施)
+    # 符号、小数点、百分率(未完成)
     def calculates(self, calc):
         if calc == '+/-':
             self.display1.text = sign_change(self.display1.text)
         elif calc == '%':
-            self.display1.text = ratio_change(self.display1.text)
+            self.display1.text = ratio_change(self.display1.text, self.display2.text)
         else:
             self.display1.text = point_change(self.display1.text)
 
     # 計算
     def equal(self, equal):
         global equal_flag
-
-        text = "{}{}".format(self.display2.text, self.display1.text)
-        self.display2.text = ""
-        self.display1.text = str(Decimal(eval(text)).normalize())
         equal_flag = False
+        try:
+            text = "{}{}".format(self.display2.text, self.display1.text)
+            self.display2.text = ""
+            self.display1.text = str(Decimal(eval(text)).to_integral())
+
+        except:
+            self.display1.text = ''
 
 
 class CalculatorRoot(BoxLayout):
