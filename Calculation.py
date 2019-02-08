@@ -47,8 +47,8 @@ def ratio_change(value1, value2):
     for x in text:
         value += x
 
-    # 符号別に分岐
     ratio = str(eval(value1 + '/100'))
+    # 符号別に分岐
     if sign == '+' or sign == '-':
         # Ex)100*(10/100)
         result = str(Decimal(eval(value + '*' + ratio)).to_integral())
@@ -78,13 +78,15 @@ class Calculator(BoxLayout):
 
         if equal_flag:
             operators_flag = True
-
             # 文字列操作
-            text = "{}{}".format(self.display1.text, number)
-            self.display1.text = text
+            if self.display1.text == '0':
+                result = number
+            else:
+                result = "{}{}".format(self.display1.text, number)
+
+            self.display1.text = result
         else:
             equal_flag = True
-
             self.display1.text = number
             self.display2.text = ""
 
@@ -100,16 +102,14 @@ class Calculator(BoxLayout):
 
         if self.display1.text == "":
             operators_flag = True
-
             self.display1.text = '0'
 
         if operators_flag:
             operators_flag = False
             equal_flag = True
-
-            text = "{}{}{}".format(self.display2.text, self.display1.text, operator)
+            result = "{}{}{}".format(self.display2.text, self.display1.text, operator)
             self.display1.text = ""
-            self.display2.text = text
+            self.display2.text = result
 
     # 入力値の削除
     def delete(self):
