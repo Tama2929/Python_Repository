@@ -13,6 +13,8 @@ from decimal import Decimal
 # 符号処理
 def sign_change(value):
     result = ''
+
+    # 文字列→配列
     sign = list(value)
     # 負の符号確認
     if '-' == sign[0]:
@@ -27,9 +29,15 @@ def sign_change(value):
         return result
 
 
-# 割合処理(未完成/例外処理)
+# 割合処理
 def ratio_change(value1, value2):
     value = ''
+    result = ''
+
+    if value2 =='' or value1 == '':
+        return result
+
+    # 文字列→配列
     text = list(value2)
 
     # 符号の取得
@@ -107,7 +115,7 @@ class Calculator(BoxLayout):
     def delete(self):
         self.display1.text = ""
 
-    # 符号、小数点、百分率(未完成)
+    # 符号、小数点、百分率
     def calculates(self, calc):
         if calc == '+/-':
             self.display1.text = sign_change(self.display1.text)
