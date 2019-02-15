@@ -32,10 +32,9 @@ url = 'https://map.yahooapis.jp/geocode/V1/geoCoder'
 # csv読み込み
 cities_list = np.empty([0, 1296]) #1297の市町村をcsvファイルから取得し格納
 csv_file = open("./cities.csv", "r", encoding="ms932", errors="", newline="" )
-f = csv.reader(csv_file, delimiter=",", doublequote=True, lineterminator="\r\n", quotechar='"', skipinitialspace=True)
-for row in f: # 修正が必要
+f = csv.reader(csv_file, delimiter=",", doublequote=True, lineterminator="\n", quotechar='"', skipinitialspace=True)
+for row in f:
         cities_list = np.append(cities_list, np.array([row]))
-
 
 # データ整形(byte型→str型)
 data = str(readdata.data.decode('shift_jis')).split('\r\n')
