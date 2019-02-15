@@ -21,7 +21,7 @@ readdata = http.request(
         preload_content=False)
 
 # Yhoo!サイト(緯度経度の取得)
-payload = {'appid': '******************************************:',
+payload = {'appid': '******************************************************', # YhooのAppID
            'output': 'json',
            'al': 2,
            'recursive': 'true'}
@@ -71,7 +71,9 @@ for line in range(len(data)):
                 if len(array_data) == 9:
                         list_data = np.append(list_data, np.array([array_data]), axis=0)
         except:
-                print('data error')
+                print('error：'+ address)
+
+print('データの整形完了')
 
 # ヒートマップ作成
 coordinates_plus = []
@@ -81,13 +83,13 @@ lat = list(list_data[:,1])
 precipitation = list(list_data[:,8])
 
 for k, i, ic in zip(long, lat, precipitation):
-        coordinates_plus.append((i, k, float(ic)))
+        coordinates_plus.append((float(i), float(k), float(ic)))
 
 Heat_map = folium.Map(location=[37.6441550, 139.0175760], zoom_start=6)
-for x in range(len(array_data)):
-        Heat_map.add_child(HeatMap(coordinates_plus, radius=12))
+
+for x in range(len(coordinates_plus)):
+        folium.Map([coordinates_plus[x][0],coordinates_plus[x][1]]).add_to(Heat_map)
+
+Heat_map.add_child(HeatMap(coordinates_plus, radius=12))
 
 Heat_map.save("Heat_map.html")
-
-# 発生している課題
-# 「Process finished with exit code -1073741571 (0xC00000FD)」
